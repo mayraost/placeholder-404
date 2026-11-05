@@ -1,0 +1,509 @@
+/**
+ * placeholder-404 — Styles im "Dark Industrial"-Look von mostheimer.de.
+ *
+ * Token-Quelle: mostheimer/src/app/globals.css
+ *   @theme (Dark-Default) + .light (explizite Hell-Variante).
+ * Werte sind 1:1 übernommen (Primary Emerald, Onyx-Hintergrund, Hairline-
+ * Borders, Radii 6/8). Abweichung: statt der Next-Toggle-Klassen `.dark` /
+ * `.light` gibt es hier nur die Systempräferenz — Dark ist der Default,
+ * `@media (prefers-color-scheme: light)` schaltet auf die Hell-Tokens.
+ *
+ * Geometrie-Werte (Card, Headline, Button) sind gegen die LIVE-404 von
+ * mostheimer.de gemessen und nachgezogen, nicht aus Tailwind-Klassen geraten:
+ *   Card      max-w-lg (32rem) · rounded-[8px] · bg-surface · p-8 · kein Shadow
+ *   Headline  text-4xl (2.25rem/2.5rem) · font-bold · tracking-tight (-0.025em)
+ *   Label     mono-label · text-error · mb-4
+ *   Button    mono-label · min-h-11 · rounded-[6px] · px-6 · bg-primary
+ *
+ * Kein Build, kein Framework, kein CDN: eine Datei, ein Referenzpfad.
+ */
+
+/* ─── Fonts (self-hosted, OFL 1.1, kein Google-CDN) ─────────────────────── */
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ─── Design Tokens (Dark = Default, identisch zu mostheimer `.dark`) ───── */
+:root {
+  color-scheme: dark;
+
+  --color-primary: #10b981;
+  --color-primary-hover: #34d399;
+  --color-primary-foreground: #04120b;
+  --color-primary-muted: rgba(16, 185, 129, 0.12);
+
+  --color-background: #090a0d;
+  --color-surface: #16181d;
+  --color-surface-raised: #1c1f26;
+
+  --color-foreground: #f8fafc;
+  --color-muted-foreground: #94a3b8;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
+  --color-error: #ef4444;
+
+  --radius-card: 6px;
+  --radius-container: 8px;
+
+  --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+
+    --color-primary: #059669;
+    --color-primary-hover: #047857;
+    --color-primary-foreground: #f8fafc;
+    --color-primary-muted: rgba(5, 150, 105, 0.1);
+
+    --color-background: #f8fafc;
+    --color-surface: #ffffff;
+    --color-surface-raised: #f1f5f9;
+
+    --color-foreground: #0f172a;
+    --color-muted-foreground: #475569;
+
+    --color-border: #e2e8f0;
+    --color-border-strong: #cbd5e1;
+    --color-error: #dc2626;
+  }
+}
+
+/* ─── Basis ────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  scroll-padding-top: 2rem;
+  /* Kein horizontales Scrollen durch lange Mail-/Telefon-Strings auf 320 px */
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+  max-width: 100%;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+h1,
+h2 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--color-foreground);
+  text-wrap: balance;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 32%, transparent);
+  color: var(--color-foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Utility: Mono-Label (Badges, Metadaten) — wie mostheimer `mono-label` */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* ─── Dot-Grid-Hintergrund (CSS-Gradient, kein Bild) ───────────────────── */
+/* mostheimer: `@utility dot-grid` — Punktmatrix in 14 % Foreground, 24 px
+   Raster. KEIN radiales Ausblenden (die Live-Seite läuft über die ganze
+   Fläche durch); nur der Rand wird eingefasst, damit die Karte ruhig liest. */
+.dot-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-foreground) 14%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+  background-position: center;
+}
+
+/* ─── Skip-Link (sichtbar nur bei Fokus) ───────────────────────────────── */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-raised);
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ─── Layout ───────────────────────────────────────────────────────────── */
+/* mostheimer: `.dot-grid flex min-h-[50vh] flex-col items-center
+   justify-center px-4 text-center` */
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50vh;
+  padding: clamp(2rem, 8vh, 5rem) 1rem;
+  text-align: center;
+}
+
+/* Hairline-Card: 1 px translucent border, 8 px Radius, Surface-Fill.
+   Bewusst OHNE box-shadow — mostheimer rendert `boxShadow: none`. */
+.card {
+  width: 100%;
+  max-width: 32rem; /* max-w-lg */
+  padding: clamp(1.5rem, 5vw, 2rem); /* p-8 = 32px */
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container); /* rounded-[8px] */
+  background-color: var(--color-surface);
+}
+
+/* ─── Statuszeile ──────────────────────────────────────────────────────── */
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* mr-2 auf dem Punkt */
+  margin-bottom: 1rem; /* mb-4 */
+  color: var(--color-error);
+}
+
+.status-dot {
+  flex: none;
+  width: 0.375rem; /* h-1.5 = 6px */
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--color-error);
+}
+
+/* text-4xl (2.25rem / 2.5rem) + tracking-tight (-0.025em) + mb-3 */
+.title {
+  margin-bottom: 0.75rem;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  letter-spacing: -0.025em;
+}
+
+.lead {
+  margin-bottom: 2rem; /* mb-8 */
+  color: var(--color-muted-foreground);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ─── Actions (flex-wrap, mittig — Platz für spätere Zweit-Buttons) ────── */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* ─── Button: Primary-Pill (wie 404-CTA in mostheimer) ─────────────────── */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem; /* min-h-11 = 44 px Touch-Target */
+  padding: 0 1.5rem; /* px-6 */
+  border: 0;
+  border-radius: var(--radius-card); /* rounded-[6px] */
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+.button:hover {
+  background-color: var(--color-primary-hover);
+}
+.button:active {
+  transform: translateY(1px);
+}
+
+/* ─── Trenner + Impressum ──────────────────────────────────────────────── */
+.rule {
+  height: 0;
+  margin: 2rem 0 1.5rem;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.impressum {
+  text-align: left;
+}
+
+.impressum h2 {
+  margin-bottom: 0.75rem;
+  color: var(--color-muted-foreground);
+  font-weight: 500;
+}
+
+.impressum-list {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.impressum-list > div {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.impressum-list dt {
+  color: var(--color-muted-foreground);
+}
+
+.impressum-list dd {
+  color: var(--color-foreground);
+  /* Lange Mail-/Adress-Strings dürfen umbrechen statt zu scrollen */
+  overflow-wrap: anywhere;
+}
+
+/* Schmale Phones: Label über Wert statt 2-Spalten-Grid */
+@media (max-width: 26rem) {
+  .impressum-list > div {
+    grid-template-columns: 1fr;
+    gap: 0.125rem;
+  }
+}
+
+/* ─── Links ────────────────────────────────────────────────────────────── */
+.impressum-list a,
+.site-footer a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  touch-action: manipulation;
+  transition:
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+.impressum-list a:hover,
+.site-footer a:hover {
+  color: var(--color-primary-hover);
+  text-decoration-color: currentColor;
+}
+
+/* ─── Minimal-Footer (nur Copyright + ein Link) ─────────────────────────── */
+/* Aufbau wie der untere Streifen des mostheimer-Footers (border-t, mono-label,
+   muted), aber ohne Navigation und ohne Cookie-Settings. */
+.site-footer {
+  width: 100%;
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  color: var(--color-muted-foreground);
+}
+
+.site-footer p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.footer-sep {
+  color: var(--color-border-strong);
+}
+
+/* ─── Accessibility ────────────────────────────────────────────────────── */
+@media (prefers-contrast: more) {
+  :root {
+    --color-muted-foreground: var(--color-foreground);
+    --color-border: var(--color-border-strong);
+    --color-border-strong: var(--color-foreground);
+  }
+  .card {
+    border-width: 2px;
+  }
+  /* Rot allein trägt bei hohem Kontrast den Status nicht — Gewicht dazu */
+  .status {
+    font-weight: 700;
+  }
+  .status-dot {
+    outline: 1px solid var(--color-foreground);
+  }
+  .button {
+    outline: 1px solid var(--color-foreground);
+    outline-offset: -1px;
+  }
+}
+
+@media (forced-colors: active) {
+  :root {
+    --color-primary: CanvasText;
+    --color-primary-hover: Highlight;
+    --color-primary-foreground: Canvas;
+    --color-border: CanvasText;
+  }
+  .dot-grid {
+    display: none;
+  }
+  .card {
+    border: 1px solid CanvasText;
+  }
+  .status-dot {
+    background: CanvasText;
+  }
+  .button {
+    border: 1px solid ButtonText;
+    forced-color-adjust: none;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+  .button:hover {
+    background: Highlight;
+    color: HighlightText;
+  }
+  .site-footer {
+    border-top-color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Print ────────────────────────────────────────────────────────────── */
+@media print {
+  :root {
+    --color-background: #fff;
+    --color-surface: #fff;
+    --color-foreground: #000;
+    --color-muted-foreground: #333;
+    --color-border: #999;
+    --color-border-strong: #666;
+    --color-primary: #000;
+    --color-primary-foreground: #fff;
+    --color-primary-hover: #000;
+    --color-error: #000;
+  }
+  .dot-grid,
+  .skip-link {
+    display: none;
+  }
+  .page {
+    min-height: 0;
+    padding: 0;
+  }
+  .card {
+    max-width: none;
+    break-inside: avoid;
+  }
+  .button {
+    border: 1px solid #000;
+  }
+  .site-footer {
+    padding-inline: 0;
+  }
+  /* Ziel-URLs sichtbar machen, weil die Seite auf Papier keinen Link trägt */
+  a[href^="mailto:"]::after,
+  a[href^="tel:"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    word-break: break-all;
+  }
+}

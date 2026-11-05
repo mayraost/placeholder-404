@@ -1,0 +1,4 @@
+# Fremde Artefakte, die im Arbeitsverzeichnis auftauchen können
+# (z. B. Dumps aus Proxmox-Jobs). Nie committen.
+*.sqlite3
+*.sqlite3-*
