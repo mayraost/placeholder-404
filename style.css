@@ -8,6 +8,13 @@
  * `.light` gibt es hier nur die Systempräferenz — Dark ist der Default,
  * `@media (prefers-color-scheme: light)` schaltet auf die Hell-Tokens.
  *
+ * Geometrie-Werte (Card, Headline, Button) sind gegen die LIVE-404 von
+ * mostheimer.de gemessen und nachgezogen, nicht aus Tailwind-Klassen geraten:
+ *   Card      max-w-lg (32rem) · rounded-[8px] · bg-surface · p-8 · kein Shadow
+ *   Headline  text-4xl (2.25rem/2.5rem) · font-bold · tracking-tight (-0.025em)
+ *   Label     mono-label · text-error · mb-4
+ *   Button    mono-label · min-h-11 · rounded-[6px] · px-6 · bg-primary
+ *
  * Kein Build, kein Framework, kein CDN: eine Datei, ein Referenzpfad.
  */
 
@@ -83,9 +90,6 @@
   --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /* Punktmatrix des dot-grid: Foreground mit 14 % Deckkraft */
-  --dot-color: rgba(248, 250, 252, 0.14);
 }
 
 @media (prefers-color-scheme: light) {
@@ -107,8 +111,6 @@
     --color-border: #e2e8f0;
     --color-border-strong: #cbd5e1;
     --color-error: #dc2626;
-
-    --dot-color: rgba(15, 23, 42, 0.14);
   }
 }
 
@@ -123,7 +125,10 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
   scroll-padding-top: 2rem;
+  /* Kein horizontales Scrollen durch lange Mail-/Telefon-Strings auf 320 px */
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -131,6 +136,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: clip;
+  max-width: 100%;
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-body);
@@ -167,7 +173,7 @@ h2 {
 /* Utility: Mono-Label (Badges, Metadaten) — wie mostheimer `mono-label` */
 .mono-label {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.75rem; /* 12px */
   line-height: 1.2;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -175,25 +181,20 @@ h2 {
 }
 
 /* ─── Dot-Grid-Hintergrund (CSS-Gradient, kein Bild) ───────────────────── */
+/* mostheimer: `@utility dot-grid` — Punktmatrix in 14 % Foreground, 24 px
+   Raster. KEIN radiales Ausblenden (die Live-Seite läuft über die ganze
+   Fläche durch); nur der Rand wird eingefasst, damit die Karte ruhig liest. */
 .dot-grid {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-foreground) 14%, transparent) 1px,
+    transparent 1px
+  );
   background-size: 24px 24px;
   background-position: center;
-  /* dezenter Verlauf zum Rand, damit die Mitte ruhig bleibt */
-  mask-image: radial-gradient(
-    ellipse 90% 80% at 50% 40%,
-    #000 45%,
-    transparent 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 90% 80% at 50% 40%,
-    #000 45%,
-    transparent 100%
-  );
 }
 
 /* ─── Skip-Link (sichtbar nur bei Fokus) ───────────────────────────────── */
@@ -203,7 +204,7 @@ h2 {
   top: 1rem;
   z-index: 10;
   padding: 0.5rem 1rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-card);
   background: var(--color-surface-raised);
   color: var(--color-primary);
@@ -217,56 +218,72 @@ h2 {
 }
 
 /* ─── Layout ───────────────────────────────────────────────────────────── */
+/* mostheimer: `.dot-grid flex min-h-[50vh] flex-col items-center
+   justify-center px-4 text-center` */
 .page {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: clamp(2rem, 8vh, 5rem) 1rem clamp(1.5rem, 6vh, 3rem);
+  min-height: 50vh;
+  padding: clamp(2rem, 8vh, 5rem) 1rem;
+  text-align: center;
 }
 
-/* Hairline-Card: 1 px translucent border, 6 px Radius, Surface-Fill */
+/* Hairline-Card: 1 px translucent border, 8 px Radius, Surface-Fill.
+   Bewusst OHNE box-shadow — mostheimer rendert `boxShadow: none`. */
 .card {
   width: 100%;
-  max-width: 32rem;
-  padding: clamp(1.5rem, 5vw, 2rem);
+  max-width: 32rem; /* max-w-lg */
+  padding: clamp(1.5rem, 5vw, 2rem); /* p-8 = 32px */
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-container); /* rounded-[8px] */
   background-color: var(--color-surface);
-  box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.6);
-}
-
-@media (prefers-color-scheme: light) {
-  .card {
-    box-shadow: 0 24px 60px -40px rgba(15, 23, 42, 0.25);
-  }
 }
 
 /* ─── Statuszeile ──────────────────────────────────────────────────────── */
 .status {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  justify-content: center;
+  gap: 0.5rem; /* mr-2 auf dem Punkt */
+  margin-bottom: 1rem; /* mb-4 */
   color: var(--color-error);
 }
 
 .status-dot {
-  width: 0.375rem;
+  flex: none;
+  width: 0.375rem; /* h-1.5 = 6px */
   height: 0.375rem;
   border-radius: 50%;
   background: var(--color-error);
 }
 
+/* text-4xl (2.25rem / 2.5rem) + tracking-tight (-0.025em) + mb-3 */
 .title {
   margin-bottom: 0.75rem;
-  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  letter-spacing: -0.025em;
 }
 
 .lead {
-  margin-bottom: 2rem;
+  margin-bottom: 2rem; /* mb-8 */
   color: var(--color-muted-foreground);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ─── Actions (flex-wrap, mittig — Platz für spätere Zweit-Buttons) ────── */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
 /* ─── Button: Primary-Pill (wie 404-CTA in mostheimer) ─────────────────── */
@@ -274,13 +291,17 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.75rem; /* Touch-Target ≥ 44 px */
-  padding: 0 1.5rem;
-  border-radius: var(--radius-card);
+  min-height: 2.75rem; /* min-h-11 = 44 px Touch-Target */
+  padding: 0 1.5rem; /* px-6 */
+  border: 0;
+  border-radius: var(--radius-card); /* rounded-[6px] */
   background-color: var(--color-primary);
   color: var(--color-primary-foreground);
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  touch-action: manipulation;
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
 }
 .button:hover {
   background-color: var(--color-primary-hover);
@@ -297,15 +318,21 @@ h2 {
   border-top: 1px solid var(--color-border);
 }
 
+.impressum {
+  text-align: left;
+}
+
 .impressum h2 {
   margin-bottom: 0.75rem;
   color: var(--color-muted-foreground);
+  font-weight: 500;
 }
 
 .impressum-list {
   display: grid;
   gap: 0.5rem;
   font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .impressum-list > div {
@@ -321,6 +348,8 @@ h2 {
 
 .impressum-list dd {
   color: var(--color-foreground);
+  /* Lange Mail-/Adress-Strings dürfen umbrechen statt zu scrollen */
+  overflow-wrap: anywhere;
 }
 
 /* Schmale Phones: Label über Wert statt 2-Spalten-Grid */
@@ -339,19 +368,38 @@ h2 {
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
-  transition: text-decoration-color 0.15s ease;
+  touch-action: manipulation;
+  transition:
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
 }
 .impressum-list a:hover,
 .site-footer a:hover {
+  color: var(--color-primary-hover);
   text-decoration-color: currentColor;
 }
 
 /* ─── Minimal-Footer (nur Copyright + ein Link) ─────────────────────────── */
+/* Aufbau wie der untere Streifen des mostheimer-Footers (border-t, mono-label,
+   muted), aber ohne Navigation und ohne Cookie-Settings. */
 .site-footer {
+  width: 100%;
   padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
   border-top: 1px solid var(--color-border);
   text-align: center;
   color: var(--color-muted-foreground);
+}
+
+.site-footer p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.footer-sep {
+  color: var(--color-border-strong);
 }
 
 /* ─── Accessibility ────────────────────────────────────────────────────── */
@@ -359,6 +407,21 @@ h2 {
   :root {
     --color-muted-foreground: var(--color-foreground);
     --color-border: var(--color-border-strong);
+    --color-border-strong: var(--color-foreground);
+  }
+  .card {
+    border-width: 2px;
+  }
+  /* Rot allein trägt bei hohem Kontrast den Status nicht — Gewicht dazu */
+  .status {
+    font-weight: 700;
+  }
+  .status-dot {
+    outline: 1px solid var(--color-foreground);
+  }
+  .button {
+    outline: 1px solid var(--color-foreground);
+    outline-offset: -1px;
   }
 }
 
@@ -367,13 +430,29 @@ h2 {
     --color-primary: CanvasText;
     --color-primary-hover: Highlight;
     --color-primary-foreground: Canvas;
+    --color-border: CanvasText;
   }
   .dot-grid {
     display: none;
   }
   .card {
     border: 1px solid CanvasText;
-    box-shadow: none;
+  }
+  .status-dot {
+    background: CanvasText;
+  }
+  .button {
+    border: 1px solid ButtonText;
+    forced-color-adjust: none;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+  .button:hover {
+    background: Highlight;
+    color: HighlightText;
+  }
+  .site-footer {
+    border-top-color: CanvasText;
   }
 }
 
@@ -384,16 +463,47 @@ h2 {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
+/* ─── Print ────────────────────────────────────────────────────────────── */
 @media print {
+  :root {
+    --color-background: #fff;
+    --color-surface: #fff;
+    --color-foreground: #000;
+    --color-muted-foreground: #333;
+    --color-border: #999;
+    --color-border-strong: #666;
+    --color-primary: #000;
+    --color-primary-foreground: #fff;
+    --color-primary-hover: #000;
+    --color-error: #000;
+  }
   .dot-grid,
   .skip-link {
     display: none;
   }
-  body {
-    background: #fff;
-    color: #000;
+  .page {
+    min-height: 0;
+    padding: 0;
+  }
+  .card {
+    max-width: none;
+    break-inside: avoid;
+  }
+  .button {
+    border: 1px solid #000;
+  }
+  .site-footer {
+    padding-inline: 0;
+  }
+  /* Ziel-URLs sichtbar machen, weil die Seite auf Papier keinen Link trägt */
+  a[href^="mailto:"]::after,
+  a[href^="tel:"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    word-break: break-all;
   }
 }

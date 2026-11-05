@@ -12,9 +12,16 @@ nur ungenutzte Hostnames sehen diese 404-Seite.
 
 ## Seite
 
-Nachbau der mostheimer-404 („Dark Industrial"): Dot-Grid-Hintergrund, Hairline-
-Card, Mono-Statuszeile „HTTP 404 · Not Found" mit Fehler-Punkt, Space-Grotesk-
-Headline, Primary-Button. **Kein Header**, Footer nur als Copyright-Zeile.
+Nachbau der mostheimer-404 („Dark Industrial") — **Stand 05.11.2026 live
+vermessen**, nicht aus Tailwind-Klassen geraten. Dot-Grid-Hintergrund,
+Hairline-Card, Mono-Statuszeile „HTTP 404 · Not Found" mit Fehler-Punkt,
+Space-Grotesk-Headline, Primary-Button.
+
+Bewusste Abweichungen von der Vorlage (nur diese zwei):
+
+- **Kein Header** — die Seite gehört zu keinem aktiven Projekt.
+- **Footer nur als Copyright-Zeile** — hier gibt es keinen Consent-Mechanismus,
+  also auch keinen „Cookie-Einstellungen"-Link.
 
 | Merkmal    | Umsetzung                                                                  |
 | ---------- | -------------------------------------------------------------------------- |
@@ -25,9 +32,27 @@ Headline, Primary-Button. **Kein Header**, Footer nur als Copyright-Zeile.
 | JavaScript | keins                                                                      |
 | Build      | keiner — statisches HTML + eine CSS-Datei                                  |
 
+### Geometrie-Parität (gegen die Live-404 gemessen)
+
+| Element  | Wert                                                                                  |
+| -------- | ------------------------------------------------------------------------------------- |
+| Card     | `max-width: 32rem` · `border-radius: 8px` · `padding: 32px` · **kein** `box-shadow`   |
+| Headline | `2.25rem/2.5rem` · `700` · `letter-spacing: -0.025em` · `margin-bottom: 12px`         |
+| Label    | `text-error` · JetBrains Mono `12px` · uppercase · `margin-bottom: 1rem`              |
+| Button   | `border-radius: 6px` · `min-height: 44px` · `padding: 0 24px` · Mono `12px` uppercase |
+
 Dark ist Default, weil mostheimer selbst Dark-first ist (`:root` ist dort immer
 dunkel, `.light` schaltet hell). Eine nackte 404 ohne Theme-Toggle folgt der
 Systempräferenz, startet aber dunkel.
+
+### Bekannte, übernommene Eigenheit
+
+Im Hell-Modus erreicht der Button-Text (`#f8fafc` auf `#059669`) 3.60:1 und
+Primary-Links (`#059669` auf `#ffffff`) 3.77:1 — unter WCAG AA für Normaltext
+(4.5:1). Beide Werte sind **1:1 aus mostheimer übernommen** (dort identisch
+gemessen), damit die Seite wie ihre Vorlage aussieht. Beide Textsorten sind
+groß/fett gesetzt und erfüllen damit AA-Large (3:1). Eine Korrektur müsste
+zentral im mostheimer-Design-System passieren, nicht nur hier.
 
 ## Dateien
 
@@ -38,6 +63,10 @@ Systempräferenz, startet aber dunkel.
 | `fonts/`     | Selbst gehostete woff2 (Space Grotesk, JetBrains Mono) |
 | `nginx.conf` | alles 404 außer der internen 404-Seite + Assets        |
 | `Dockerfile` | nginx Image, exakt gepinnt (mit Digest)                |
+
+Das Impressum sitzt **in der Karte**, weil § 5 DDG eine leicht erkennbare
+Anbieterkennzeichnung verlangt — auch auf einer Fehlerseite. Der Footer bleibt
+deshalb die reine Copyright-Zeile.
 
 ## Routen
 

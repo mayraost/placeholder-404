@@ -24,32 +24,37 @@
   <body>
     <!--
   Catch-All-404 für ungenutzte Hosts / gestoppte Apps.
-  Visuelle Sprache: mostheimer.de (Dark Industrial) — Header bewusst NICHT
-  vorhanden, Footer nur als Copyright-Zeile. Token-Quelle:
-  mostheimer/src/app/globals.css (@theme + .dark + .light).
+
+  Vorbild (1:1 nachgebaut, Stand 05.11.2026): die 404-Seite von mostheimer.de
+  (src/components/layout/StatusScreen.tsx + globals.css). Abweichungen sind
+  bewusst und beschränken sich auf zwei Punkte:
+    · kein Header (diese Seite gehört zu keinem aktiven Projekt)
+    · Footer nur als Copyright-Zeile (kein Consent-Mechanismus vorhanden)
+  Das Impressum sitzt in der Karte, weil § 5 DDG eine leicht erkennbare
+  Anbieterkennzeichnung verlangt — auch auf einer Fehlerseite.
 -->
     <div class="dot-grid" aria-hidden="true"></div>
 
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-    <main id="main" class="page">
+    <main id="main" class="page" tabindex="-1">
       <section class="card" aria-labelledby="card-title">
         <p class="mono-label status">
           <span class="status-dot" aria-hidden="true"></span>
           HTTP 404 · Not Found
         </p>
 
-        <h1 id="card-title" class="title">Nicht gefunden</h1>
+        <h1 id="card-title" class="title">404 - Seite nicht gefunden</h1>
 
         <p class="lead">
-          Diese Adresse gehört zu keinem aktiven Projekt. Entweder ist die
-          Anwendung gerade gestoppt, oder die (Sub-)Domain ist noch nicht
-          vergeben.
+          Die gesuchte Seite existiert nicht oder wurde verschoben.
         </p>
 
-        <a class="button mono-label" href="https://mostheimer.de/de"
-          >Zur Startseite</a
-        >
+        <div class="actions">
+          <a class="button mono-label" href="https://mostheimer.de"
+            >Zurück zur Startseite</a
+          >
+        </div>
 
         <hr class="rule" />
 
@@ -83,8 +88,8 @@
 
     <footer class="site-footer">
       <p class="mono-label">
-        © 2026 Mostheimer ·
-        <a href="mailto:mail@mostheimer.de">Kontakt</a>
+        © 2026 Mostheimer<span class="footer-sep" aria-hidden="true">·</span
+        ><a href="mailto:mail@mostheimer.de">Kontakt</a>
       </p>
     </footer>
   </body>
