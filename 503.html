@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="theme-color"
+      content="#090a0d"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#f8fafc"
+      media="(prefers-color-scheme: light)"
+    />
+    <title>503 · Kurz nicht erreichbar</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!--
+  Catch-All-503 für die Site-Hosts (mostheimer.de, www.mostheimer.de), wenn
+  deren App-Container nicht läuft. Übernimmt der Traefik-Catch-All, ist der
+  Ursprung weg — 503 sagt „existiert, ist gerade nicht da" statt „gelöscht"
+  (404), hält Suchmaschinen bei der Domain und erlaubt dem Edge-Cache,
+  `stale-if-error` zu greifen statt die 404 30 Tage zu konservieren.
+
+  Gleiches Design wie 404.html (dort steht die Herleitung des Nachbaus).
+  Kein JavaScript, keine externen Ressourcen — nur /style.css und /fonts/.
+-->
+    <div class="dot-grid" aria-hidden="true"></div>
+
+    <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+    <main id="main" class="page" tabindex="-1">
+      <section class="card" aria-labelledby="card-title">
+        <p class="mono-label status">
+          <span class="status-dot" aria-hidden="true"></span>
+          HTTP 503 · Service Unavailable
+        </p>
+
+        <h1 id="card-title" class="title">Gerade nicht erreichbar.</h1>
+
+        <p class="lead">
+          Diese Seite gehört zu einer Anwendung, die im Moment nicht läuft —
+          gewartet, neu deployt oder unerwartet ausgestiegen. Das ist fast immer
+          vorübergehend.
+        </p>
+
+        <p class="lead">Bitte in ein paar Minuten erneut versuchen.</p>
+
+        <p class="lead" lang="en">
+          This site is temporarily unavailable. Please try again in a few
+          minutes.
+        </p>
+
+        <div class="actions">
+          <a class="button mono-label" href="https://mostheimer.de"
+            >Zurück zur Startseite</a
+          >
+        </div>
+
+        <hr class="rule" />
+
+        <section class="impressum" aria-labelledby="impressum-title">
+          <h2 id="impressum-title" class="mono-label">Impressum</h2>
+          <dl class="impressum-list">
+            <div>
+              <dt class="mono-label">Anbieter</dt>
+              <dd>Mayra Ostheimer</dd>
+            </div>
+            <div>
+              <dt class="mono-label">Anschrift</dt>
+              <dd>Ringstraße 60, 25368 Kiebitzreihe</dd>
+            </div>
+            <div>
+              <dt class="mono-label">Telefon</dt>
+              <dd>
+                <a href="tel:+4917663787951">0176&hairsp;6378&hairsp;7951</a>
+              </dd>
+            </div>
+            <div>
+              <dt class="mono-label">E-Mail</dt>
+              <dd>
+                <!--email_off--><a href="mailto:mail@mostheimer.de"
+                  >mail@mostheimer.de</a
+                ><!--/email_off-->
+              </dd>
+            </div>
+          </dl>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="mono-label">
+        © 2026 Mostheimer<span class="footer-sep" aria-hidden="true">·</span
+        ><!--email_off--><a href="mailto:mail@mostheimer.de">Kontakt</a
+        ><!--/email_off-->
+      </p>
+    </footer>
+  </body>
+</html>
