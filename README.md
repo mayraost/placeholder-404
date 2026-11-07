@@ -10,12 +10,23 @@ Läuft in Coolify als Fallback-Applikation für ungenutzte Domains:
 Vom Coolify-Proxy (Traefik) schlagen spezifische App-Router vor der Wildcard —
 nur ungenutzte Hostnames sehen diese 404-Seite.
 
+**Ausnahme: die Site-Hosts selbst.** Fällt die App hinter `mostheimer.de` bzw.
+`www.mostheimer.de` aus (Container gestoppt, Crash-Loop, Deploy-Fenster),
+übernimmt dieser Container und antwortet mit **503** + Wartungsseite statt 404:
+der Host ist belegt, nur der Ursprung fehlt. Am Cloudflare-Edge ist das der
+Unterschied zwischen „30 Tage gecachtes 404" (SEO-Schaden, Host gilt als
+gelöscht) und `stale-if-error`, das die letzte gute Kopie weiterliefert.
+
 ## Seite
 
 Nachbau der mostheimer-404 („Dark Industrial") — **Stand 05.11.2026 live
 vermessen**, nicht aus Tailwind-Klassen geraten. Dot-Grid-Hintergrund,
 Hairline-Card, Mono-Statuszeile „HTTP 404 · Not Found" mit Fehler-Punkt,
 Space-Grotesk-Headline, Primary-Button.
+
+`503.html` ist dieselbe Seite mit Wartungs-Copy („Gerade nicht erreichbar.",
+deutsch + ein englischer Satz) — gleiche Klassen, gleiches Design, keine
+zusätzlichen Styles.
 
 Bewusste Abweichungen von der Vorlage (nur diese zwei):
 
@@ -59,9 +70,10 @@ zentral im mostheimer-Design-System passieren, nicht nur hier.
 | Datei        | Zweck                                                  |
 | ------------ | ------------------------------------------------------ |
 | `404.html`   | Platzhalterseite inkl. Impressum                       |
+| `503.html`   | Wartungsseite für die Site-Hosts (gleiches Design)     |
 | `style.css`  | Design-Tokens + Styles, referenziert `/fonts/*`        |
 | `fonts/`     | Selbst gehostete woff2 (Space Grotesk, JetBrains Mono) |
-| `nginx.conf` | alles 404 außer der internen 404-Seite + Assets        |
+| `nginx.conf` | 404/503-Routing, sonst nur Assets                      |
 | `Dockerfile` | nginx Image, exakt gepinnt (mit Digest)                |
 
 Das Impressum sitzt **in der Karte**, weil § 5 DDG eine leicht erkennbare
@@ -70,23 +82,34 @@ deshalb die reine Copyright-Zeile.
 
 ## Routen
 
-| Pfad                         | Antwort                        |
-| ---------------------------- | ------------------------------ |
-| `/` und beliebige Pfade      | `404` + `404.html`             |
-| `/style.css`                 | `200 text/css` (`max-age=600`) |
-| `/fonts/*.woff2`             | `200 font/woff2` (`immutable`) |
-| alles andere (z. B. favicon) | `404` + `404.html`             |
+| Pfad                              | Host                                 | Antwort                                         |
+| --------------------------------- | ------------------------------------ | ----------------------------------------------- |
+| `/` und beliebige Pfade           | `mostheimer.de`, `www.mostheimer.de` | `503` + `503.html` (`no-store`, `X-Robots-Tag`) |
+| `/` und beliebige Pfade           | alle anderen                         | `404` + `404.html`                              |
+| `/style.css`                      | jeder                                | `200 text/css` (`max-age=600`)                  |
+| `/fonts/*.woff2`                  | jeder                                | `200 font/woff2` (`immutable`)                  |
+| `/404.html`, `/503.html` (direkt) | jeder                                | `404` + `404.html` (beide `internal`)           |
+| alles andere (z. B. favicon)      | jeder                                | `404` + `404.html`                              |
 
-`404.html` setzt `Cache-Control: no-store` und strikte Security-Header
-(`nosniff`, `X-Frame-Options: DENY`, restriktive CSP ohne JS).
+Die Host-Unterscheidung passiert in `location /` über zwei `if ($host = …)`
+mit ausschließlich `return 503` — `$host` ist immer lowercase und ohne Port.
+Assets bleiben host-unabhängig `200`, sonst wäre die 503-Seite ungestylt.
+
+`404.html` und `503.html` setzen `Cache-Control: no-store` und strikte
+Security-Header (`nosniff`, `X-Frame-Options: DENY`, restriktive CSP ohne JS);
+die 503 zusätzlich `X-Robots-Tag: noindex, nofollow`.
 
 ## Lokal testen
 
 ```bash
 docker build -t placeholder-404:test .
 docker run --rm -p 127.0.0.1:3599:3000 placeholder-404:test
-curl -i http://127.0.0.1:3599/        # 404 + Seite
-curl -i http://127.0.0.1:3599/style.css
+
+# Statusmatrix (Host-Header, ohne echten DNS)
+curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: mostheimer.de'     http://127.0.0.1:3599/  # 503
+curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: www.mostheimer.de' http://127.0.0.1:3599/  # 503
+curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: foo.example'       http://127.0.0.1:3599/  # 404
+curl -sI -H 'Host: mostheimer.de' http://127.0.0.1:3599/ | grep -i cache-control                # no-store
 ```
 
 ## Fonts
