@@ -26,7 +26,8 @@ Space-Grotesk-Headline, Primary-Button.
 
 `503.html` ist dieselbe Seite mit Wartungs-Copy („Gerade nicht erreichbar.",
 deutsch + ein englischer Satz) — gleiche Klassen, gleiches Design, keine
-zusätzlichen Styles.
+zusätzlichen Styles. Beide Seiten tragen dasselbe inline MO-Monogramm an
+derselben Stelle (über der Statuszeile).
 
 Bewusste Abweichungen von der Vorlage (nur diese drei):
 
@@ -59,14 +60,16 @@ Systempräferenz, startet aber dunkel.
 
 ### Markenzeichen
 
-Über der Statuszeile steht das **MO-Monogramm** von mostheimer.de (Reticle,
+Über der Statuszeile steht auf **beiden** Seiten (`404.html` und `503.html`,
+byte-identischer Block) das **MO-Monogramm** von mostheimer.de (Reticle,
 M-Ribbon mit `</>`-Notch, O, M↔O-Bridge).
 
 **Es muss inline im HTML bleiben — nicht als `<img>`, nicht als CSS-`url()`.**
 Die CSP dieser Seite ist `default-src 'none'; img-src 'none'` (siehe
 `nginx.conf`), damit würden externe Bilder und Data-URIs nie laden. Das
-Inline-`<svg>` in `404.html` ist davon nicht betroffen und kostet keinen
-zusätzlichen Request. Wer das Mark „aufräumen" will, bricht damit die Seite.
+Inline-`<svg>` (in `404.html` und `503.html`) ist davon nicht betroffen und
+kostet keinen zusätzlichen Request. Wer das Mark „aufräumen" will, bricht
+damit die Seiten.
 
 Die Geometrie stammt aus `src/components/brand/markGeometry.ts` der
 mostheimer-Quelle; die Farben kommen aus den `--mark-*`-Tokens in `style.css`
@@ -87,14 +90,14 @@ zentral im mostheimer-Design-System passieren, nicht nur hier.
 
 ## Dateien
 
-| Datei        | Zweck                                                          |
-| ------------ | -------------------------------------------------------------- |
-| `404.html`   | Platzhalterseite inkl. Impressum und inline MO-Monogramm       |
-| `503.html`   | Wartungsseite für die Site-Hosts (gleiches Design)             |
-| `style.css`  | Design-Tokens (+ `--mark-*`) + Styles, referenziert `/fonts/*` |
-| `fonts/`     | Selbst gehostete woff2 (Space Grotesk, JetBrains Mono)         |
-| `nginx.conf` | 404/503-Routing, sonst nur Assets                              |
-| `Dockerfile` | nginx Image, exakt gepinnt (mit Digest)                        |
+| Datei        | Zweck                                                             |
+| ------------ | ----------------------------------------------------------------- |
+| `404.html`   | Platzhalterseite inkl. Impressum und inline MO-Monogramm          |
+| `503.html`   | Wartungsseite für die Site-Hosts (gleiches Design, gleiches Mark) |
+| `style.css`  | Design-Tokens (+ `--mark-*`) + Styles, referenziert `/fonts/*`    |
+| `fonts/`     | Selbst gehostete woff2 (Space Grotesk, JetBrains Mono)            |
+| `nginx.conf` | 404/503-Routing, sonst nur Assets                                 |
+| `Dockerfile` | nginx Image, exakt gepinnt (mit Digest)                           |
 
 Das Impressum sitzt **in der Karte**, weil § 5 DDG eine leicht erkennbare
 Anbieterkennzeichnung verlangt — auch auf einer Fehlerseite. Der Footer bleibt

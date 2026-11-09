@@ -38,6 +38,122 @@
 
     <main id="main" class="page" tabindex="-1">
       <section class="card" aria-labelledby="card-title">
+        <!--
+          Brand mark inline (nicht als <img>): die CSP dieser Seite ist
+          `default-src 'none'; img-src 'none'`. Ein externes Bild würde also
+          nie laden. Die Pfade stammen aus dem MO-Monogramm von mostheimer.de
+          (src/components/brand/markGeometry.ts); Farben kommen aus den
+          --mark-*-Tokens und folgen damit Hell/Dunkel ohne zweites Asset.
+        -->
+        <svg
+          class="brand-mark"
+          viewBox="0 0 440 300"
+          role="img"
+          aria-label="Mayra Ostheimer"
+        >
+          <g fill="none" stroke-width="2">
+            <polyline
+              points="12,52 12,20 44,20"
+              stroke="var(--mark-reticle-a)"
+              stroke-opacity="0.55"
+            />
+            <polyline
+              points="12,256 12,288 44,288"
+              stroke="var(--mark-reticle-a)"
+              stroke-opacity="0.55"
+            />
+            <polyline
+              points="376,20 408,20 408,52"
+              stroke="var(--mark-reticle-b)"
+              stroke-opacity="0.55"
+            />
+            <polyline
+              points="376,288 408,288 408,256"
+              stroke="var(--mark-reticle-b)"
+              stroke-opacity="0.55"
+            />
+            <rect
+              x="9"
+              y="17"
+              width="6"
+              height="6"
+              fill="var(--mark-reticle-a)"
+            />
+            <rect
+              x="9"
+              y="285"
+              width="6"
+              height="6"
+              fill="var(--mark-reticle-a)"
+            />
+            <rect
+              x="405"
+              y="17"
+              width="6"
+              height="6"
+              fill="var(--mark-reticle-b)"
+            />
+            <rect
+              x="405"
+              y="285"
+              width="6"
+              height="6"
+              fill="var(--mark-reticle-b)"
+            />
+          </g>
+          <path
+            d="M 34,232 L 54,252 L 68,252 L 68,120 L 126,184 L 126,134 L 56,56 L 34,56 Z"
+            fill="var(--mark-m-left-1)"
+          />
+          <path
+            d="M 126,134 L 126,184 L 184,120 L 184,232 L 204,252 L 218,252 L 218,56 L 196,56 Z"
+            fill="var(--mark-m-right-0)"
+          />
+          <polygon
+            points="126,134 126,184 154,153"
+            fill="var(--mark-fold)"
+            fill-opacity="0.45"
+          />
+          <g
+            fill="none"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline
+              points="105,48 93,60 105,72"
+              stroke="var(--mark-code-left)"
+            />
+            <line
+              x1="131"
+              y1="45"
+              x2="121"
+              y2="75"
+              stroke="var(--mark-code-slash)"
+            />
+            <polyline
+              points="147,48 159,60 147,72"
+              stroke="var(--mark-code-right)"
+            />
+          </g>
+          <path
+            d="M 248,230 L 230,212 L 230,96 L 270,56 L 346,56 L 368,78 L 344,102 L 332,90 L 284,90 L 264,110 L 264,198 L 272,206 Z"
+            fill="var(--mark-o-top-0)"
+          />
+          <path
+            d="M 373,83 L 386,96 L 386,212 L 346,252 L 270,252 L 253,235 L 277,211 L 284,218 L 332,218 L 352,198 L 352,110 L 349,107 Z"
+            fill="var(--mark-o-bottom-1)"
+          />
+          <polygon
+            points="204,146 244,146 238,162 198,162"
+            fill="var(--mark-bridge-gap)"
+          />
+          <polygon
+            points="206,149 242,149 238,159 202,159"
+            fill="var(--mark-o-top-0)"
+          />
+        </svg>
+
         <p class="mono-label status">
           <span class="status-dot" aria-hidden="true"></span>
           HTTP 503 · Service Unavailable
