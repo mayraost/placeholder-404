@@ -87,6 +87,25 @@
   --radius-card: 6px;
   --radius-container: 8px;
 
+  /* Brand mark palette — mirrors mostheimer's `--mark-*` tokens verbatim
+     (`src/app/globals.css` / `markGeometry.ts`). The MO monogram is inline
+     SVG, so its fills cannot use classes; these properties are the bridge.
+     `:root` = dark, the light block below overrides. */
+  --mark-m-left-0: #34d399;
+  --mark-m-left-1: #10b981;
+  --mark-m-right-0: #10b981;
+  --mark-m-right-1: #0ea5e9;
+  --mark-o-top-0: #10b981;
+  --mark-o-top-1: #06b6d4;
+  --mark-o-bottom-1: #06b6d4;
+  --mark-code-left: #10b981;
+  --mark-code-slash: #22d3ee;
+  --mark-code-right: #06b6d4;
+  --mark-reticle-a: #10b981;
+  --mark-reticle-b: #06b6d4;
+  --mark-fold: #071f29;
+  --mark-bridge-gap: #090a0d;
+
   --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -111,6 +130,23 @@
     --color-border: #e2e8f0;
     --color-border-strong: #cbd5e1;
     --color-error: #dc2626;
+
+    /* Brand mark, light variant: the darker token pair. The neon set sits
+       ~2.4:1 on white (a smear); these stay near 3.4:1. */
+    --mark-m-left-0: #34d399;
+    --mark-m-left-1: #059669;
+    --mark-m-right-0: #0891b2;
+    --mark-m-right-1: #0e7490;
+    --mark-o-top-0: #059669;
+    --mark-o-top-1: #0891b2;
+    --mark-o-bottom-1: #0e7490;
+    --mark-code-left: #059669;
+    --mark-code-slash: #0e7490;
+    --mark-code-right: #0891b2;
+    --mark-reticle-a: #059669;
+    --mark-reticle-b: #0891b2;
+    --mark-fold: #062b24;
+    --mark-bridge-gap: #f8fafc;
   }
 }
 
@@ -241,6 +277,19 @@ h2 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-container); /* rounded-[8px] */
   background-color: var(--color-surface);
+}
+
+/* ─── Markenzeichen ────────────────────────────────────────────────────────
+   MO-Monogramm, mittig über der Statuszeile. Höhe statt Breite gesetzt, damit
+   das Seitenverhältnis (440:300) erhalten bleibt; `max-width` fängt sehr
+   schmale Viewports ab, ohne die Höhe zu verzerren. Kostet kein zusätzliches
+   Asset und keinen Request — die Pfade stehen inline im HTML. */
+.brand-mark {
+  display: block;
+  height: 3.25rem; /* 52px */
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto 1.25rem;
 }
 
 /* ─── Statuszeile ──────────────────────────────────────────────────────── */
@@ -482,7 +531,8 @@ h2 {
     --color-error: #000;
   }
   .dot-grid,
-  .skip-link {
+  .skip-link,
+  .brand-mark {
     display: none;
   }
   .page {

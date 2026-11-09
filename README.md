@@ -28,11 +28,12 @@ Space-Grotesk-Headline, Primary-Button.
 deutsch + ein englischer Satz) — gleiche Klassen, gleiches Design, keine
 zusätzlichen Styles.
 
-Bewusste Abweichungen von der Vorlage (nur diese zwei):
+Bewusste Abweichungen von der Vorlage (nur diese drei):
 
 - **Kein Header** — die Seite gehört zu keinem aktiven Projekt.
 - **Footer nur als Copyright-Zeile** — hier gibt es keinen Consent-Mechanismus,
   also auch keinen „Cookie-Einstellungen"-Link.
+- **Markenzeichen inline in der Karte** statt als Asset — siehe unten.
 
 | Merkmal    | Umsetzung                                                                  |
 | ---------- | -------------------------------------------------------------------------- |
@@ -56,6 +57,25 @@ Dark ist Default, weil mostheimer selbst Dark-first ist (`:root` ist dort immer
 dunkel, `.light` schaltet hell). Eine nackte 404 ohne Theme-Toggle folgt der
 Systempräferenz, startet aber dunkel.
 
+### Markenzeichen
+
+Über der Statuszeile steht das **MO-Monogramm** von mostheimer.de (Reticle,
+M-Ribbon mit `</>`-Notch, O, M↔O-Bridge).
+
+**Es muss inline im HTML bleiben — nicht als `<img>`, nicht als CSS-`url()`.**
+Die CSP dieser Seite ist `default-src 'none'; img-src 'none'` (siehe
+`nginx.conf`), damit würden externe Bilder und Data-URIs nie laden. Das
+Inline-`<svg>` in `404.html` ist davon nicht betroffen und kostet keinen
+zusätzlichen Request. Wer das Mark „aufräumen" will, bricht damit die Seite.
+
+Die Geometrie stammt aus `src/components/brand/markGeometry.ts` der
+mostheimer-Quelle; die Farben kommen aus den `--mark-*`-Tokens in `style.css`
+und spiegeln die dortigen `MARK_PALETTE_DARK`/`_LIGHT`-Werte (`:root` = dunkel,
+`prefers-color-scheme: light` = hell). Anders als dort wird **kein**
+`linearGradient` verwendet — die Flächen sind flach mit dem mittleren
+Paletten-Stop; das spart `<defs>` plus ID-Kollisionen und wirkt bei 52 px Höhe
+identisch. Im Druck (`@media print`) wird das Mark ausgeblendet.
+
 ### Bekannte, übernommene Eigenheit
 
 Im Hell-Modus erreicht der Button-Text (`#f8fafc` auf `#059669`) 3.60:1 und
@@ -67,14 +87,14 @@ zentral im mostheimer-Design-System passieren, nicht nur hier.
 
 ## Dateien
 
-| Datei        | Zweck                                                  |
-| ------------ | ------------------------------------------------------ |
-| `404.html`   | Platzhalterseite inkl. Impressum                       |
-| `503.html`   | Wartungsseite für die Site-Hosts (gleiches Design)     |
-| `style.css`  | Design-Tokens + Styles, referenziert `/fonts/*`        |
-| `fonts/`     | Selbst gehostete woff2 (Space Grotesk, JetBrains Mono) |
-| `nginx.conf` | 404/503-Routing, sonst nur Assets                      |
-| `Dockerfile` | nginx Image, exakt gepinnt (mit Digest)                |
+| Datei        | Zweck                                                          |
+| ------------ | -------------------------------------------------------------- |
+| `404.html`   | Platzhalterseite inkl. Impressum und inline MO-Monogramm       |
+| `503.html`   | Wartungsseite für die Site-Hosts (gleiches Design)             |
+| `style.css`  | Design-Tokens (+ `--mark-*`) + Styles, referenziert `/fonts/*` |
+| `fonts/`     | Selbst gehostete woff2 (Space Grotesk, JetBrains Mono)         |
+| `nginx.conf` | 404/503-Routing, sonst nur Assets                              |
+| `Dockerfile` | nginx Image, exakt gepinnt (mit Digest)                        |
 
 Das Impressum sitzt **in der Karte**, weil § 5 DDG eine leicht erkennbare
 Anbieterkennzeichnung verlangt — auch auf einer Fehlerseite. Der Footer bleibt
