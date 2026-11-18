@@ -1,5 +1,6 @@
 # Exact pin incl. digest per dependency-pinning policy
-FROM nginx:1.29.8-alpine3.23@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
+# 1.30.7: fixes CVE-2026-123633 + CVE-2026-123007 (HTTP/2 RCE, CVSS 9.2)
+FROM nginx:1.30.7-alpine3.24@sha256:bef154735288bc38d99fac41ae63730684bcc661503673a04a0f9bc526ba8598
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY 404.html /srv/placeholder/404.html
